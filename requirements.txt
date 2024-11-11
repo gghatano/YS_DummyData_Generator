@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 altair==5.4.1
 annotated-types==0.7.0
 anthropic==0.39.0
@@ -49,3 +50,13 @@ tornado==6.4.1
 typing-extensions==4.12.2
 tzdata==2024.2
 urllib3==2.2.3
+=======
+certifi @ file:///private/tmp/certifi-20240307-4909-d45d8o/certifi-2024.2.2
+gpg==1.23.2
+openvino==2024.0.0
+packaging==24.0
+pip @ file:///usr/local/Cellar/python%403.12/3.12.2_1/Frameworks/Python.framework/Versions/3.12/lib/python3.12/ensurepip/_bundled/pip-24.0-py3-none-any.whl
+pycairo @ file:///private/tmp/py3cairo-20240213-5909-fhths9/pycairo-1.26.0
+tbb @ file:///private/tmp/tbb-20231202-5149-eakl1q/oneTBB-2021.11.0/python
+wheel @ file:///usr/local/Cellar/python%403.12/3.12.2_1/libexec/wheel-0.42.0-py3-none-any.whl
+>>>>>>> 839eaa0780c56ee0c388945d0a278daa78385759
