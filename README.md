@@ -1,7 +1,7 @@
 # YS_DummyData_Generator
 
 ## デモ環境
-[こちらから利用できるようになる予定です](https://ysdummydatagenerator-8zuxbeqserrd3fxgpmv4de.streamlit.app/)
+[こちらから利用できます](https://ysdummydatagenerator-8zuxbeqserrd3fxgpmv4de.streamlit.app/)
 
 ## デモ動画
 ![demo](./demo.gif)
