@@ -6,7 +6,7 @@ from anthropic import Anthropic
 st.set_page_config(page_title="サンプルデータ生成アプリケーション", layout="wide")
 
 # タイトルの表示
-st.title("サンプルデータ生成アプリケーション(※Claude-APIキーを利用します)")
+st.title("サンプルデータ生成アプリケーション  ¥n(※Claude-APIキーを利用します)")
 
 # Claude APIキーの入力
 claude_api_key = st.text_input("ClaudeのAPIキーを入力してください", type="password")
