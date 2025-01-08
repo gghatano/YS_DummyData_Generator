@@ -85,7 +85,7 @@ if claude_api_key:
             precondition = st.text_area("前提条件を記入してください", value=default_precondition)
 
             # 品質確認用データの生成ボタン
-            if st.button("品質確認用データを生成"):
+            if st.button("品質確認用データを生成 (注意! ClaudeAPI利用料金が発生します!)"):
                 with st.spinner('データを生成中です。しばらくお待ちください...'):
                     message_content = f"以下の要件に基づき、10行のサンプルデータを生成してください。\n"
                     if precondition:
@@ -135,7 +135,7 @@ if claude_api_key:
         st.write("確定した設定内容に基づいて、データ生成プログラムを作成します。")
 
         # プログラム生成ボタン
-        if st.button("データ生成プログラムを作成"):
+        if st.button("データ生成プログラムを作成 (注意! ClaudeAPI利用料金が発生します!)"):
             with st.spinner('Pythonプログラムを生成中です。しばらくお待ちください...'):
                 message_content = f"""
 以下の要件に基づき、CSVデータを生成するPythonプログラムを作成してください。
@@ -198,15 +198,24 @@ if claude_api_key:
                 except Exception as e:
                     st.error(f"プログラム生成中にエラーが発生しました: {e}")
 
-        # 生成されたプログラムの表示（セッション状態から）
+        # 生成されたプログラムの表示と編集（セッション状態から）
         if st.session_state.generator_code is not None:
             st.subheader("生成されたPythonプログラム")
-            st.code(st.session_state.generator_code, language='python')
+            # 編集可能なテキストエリアとして表示
+            edited_code = st.text_area(
+                "プログラムを編集できます",
+                value=st.session_state.generator_code,
+                height=400
+            )
 
-            # プログラムのダウンロードボタン
+            # 元のコードと編集後のコードを比較
+            if edited_code != st.session_state.generator_code:
+                st.warning("プログラムが編集されています。")
+
+            # プログラムのダウンロードボタン（編集されたバージョン）
             st.download_button(
                 label="Pythonプログラムをダウンロード",
-                data=st.session_state.generator_code,
+                data=edited_code,
                 file_name='data_generator.py',
                 mime='text/plain'
             )
@@ -214,13 +223,13 @@ if claude_api_key:
             # データ生成の実行セクション
             st.subheader("データ生成の実行")
             num_rows = st.number_input("生成する行数", min_value=1, value=100)
-            
+
             if st.button("プログラムを実行してデータを生成"):
                 with st.spinner(f'{num_rows}行のデータを生成中です。しばらくお待ちください...'):
                     try:
-                        # 一時ファイルにプログラムを保存
+                        # 一時ファイルに編集されたプログラムを保存
                         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False, encoding='utf-8') as f:
-                            f.write(st.session_state.generator_code)
+                            f.write(edited_code)  # 編集されたコードを使用
                             temp_file = f.name
 
                         # プログラムを実行
@@ -235,7 +244,6 @@ if claude_api_key:
                         os.unlink(temp_file)
 
                         if result.returncode == 0:
-                            # 生成されたCSVファイルを読み込む
                             try:
                                 df_generated = pd.read_csv('generated_data.csv')
                                 st.session_state.phase2_data = df_generated
@@ -243,7 +251,7 @@ if claude_api_key:
                             except Exception as e:
                                 st.error(f"CSVファイルの読み込み中にエラーが発生しました: {e}")
                         else:
-                            st.error(f"プログラムの実行中にエラーが発生しました:\n{result.stderr}")
+                            st.error("プログラムの実行中にエラーが発生しました")
                             # エラーの詳細をデバッグ表示
                             with st.expander("エラーの詳細"):
                                 st.code(result.stderr)
@@ -251,18 +259,20 @@ if claude_api_key:
                     except Exception as e:
                         st.error(f"実行中にエラーが発生しました: {e}")
 
-            # フェーズ2のデータ表示（セッション状態から）
-            if st.session_state.phase2_data is not None:
-                # データの表示
-                st.subheader("生成されたデータ（プレビュー：先頭10行）")
-                st.dataframe(st.session_state.phase2_data.head(10))
-                
-                # CSVダウンロードボタン
-                csv = st.session_state.phase2_data.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="生成したCSVファイルをダウンロード",
-                    data=csv,
-                    file_name='generated_data.csv',
-                    mime='text/csv',
-                    key='download_generated_csv'
-                )
+                    # 成功した場合のデータ表示とダウンロード
+                    if st.session_state.phase2_data is not None:
+                        # データの表示
+                        st.subheader("生成されたデータ（プレビュー：先頭10行）")
+                        st.dataframe(st.session_state.phase2_data.head(10))
+
+                        # CSVダウンロードボタン
+                        csv = st.session_state.phase2_data.to_csv(index=False).encode('utf-8')
+                        st.download_button(
+                            label="生成したCSVファイルをダウンロード",
+                            data=csv,
+                            file_name='generated_data.csv',
+                            mime='text/csv',
+                            key='download_generated_csv'
+                        )
+
+
