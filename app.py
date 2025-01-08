@@ -85,7 +85,7 @@ if claude_api_key:
             precondition = st.text_area("前提条件を記入してください", value=default_precondition)
 
             # 品質確認用データの生成ボタン
-            if st.button("品質確認用データを生成"):
+            if st.button("品質確認用データを生成 (注意! ClaudeAPI利用料金が発生します!)"):
                 with st.spinner('データを生成中です。しばらくお待ちください...'):
                     message_content = f"以下の要件に基づき、10行のサンプルデータを生成してください。\n"
                     if precondition:
@@ -135,7 +135,7 @@ if claude_api_key:
         st.write("確定した設定内容に基づいて、データ生成プログラムを作成します。")
 
         # プログラム生成ボタン
-        if st.button("データ生成プログラムを作成"):
+        if st.button("データ生成プログラムを作成 (注意! ClaudeAPI利用料金が発生します!)"):
             with st.spinner('Pythonプログラムを生成中です。しばらくお待ちください...'):
                 message_content = f"""
 以下の要件に基づき、CSVデータを生成するPythonプログラムを作成してください。
